@@ -12,8 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.rememberNavController
 import com.rahulverlekar.domain.models.GhostSighting
 import com.rahulverlekar.domain.repository.GhostSightingRepository
+import com.rahulverlekar.ghoststories.ui.NavGraph
 import com.rahulverlekar.ghoststories.ui.theme.GhostStoriesTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -27,19 +29,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launch {
-            val data = repository.getAllSighting()
-            print("Hello world")
-        }
         enableEdgeToEdge()
         setContent {
             GhostStoriesTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                val navController = rememberNavController()
+                NavGraph(navController)
             }
         }
     }
