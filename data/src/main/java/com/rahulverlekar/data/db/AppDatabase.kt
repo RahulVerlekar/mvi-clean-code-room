@@ -5,9 +5,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.rahulverlekar.data.db.migrations.MIGRATION_1_2
 import com.rahulverlekar.data.entities.GhostSighting
 
-@Database(entities = [GhostSighting::class], version = 1, exportSchema = false)
+@Database(entities = [GhostSighting::class], version = 2, exportSchema = true)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun ghostSightingDao(): GhostSightingDao
 
@@ -20,8 +21,11 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context,
                     AppDatabase::class.java,
-                    "ghost-database" // Name of your database file
-                ).build()
+                    "ghost-database"
+                )
+                    .addMigrations(MIGRATION_1_2)
+                    .fallbackToDestructiveMigration(false)
+                    .build()
                 INSTANCE = instance
                 instance
             }

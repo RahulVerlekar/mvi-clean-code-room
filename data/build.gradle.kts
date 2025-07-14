@@ -3,7 +3,13 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.room.extention)
 }
+
+//ksp {
+//    arg(RoomSchemaArgProvider(File(projectDir, "schemas")))
+//}
+
 hilt {
     enableAggregatingTask = false
 }
@@ -12,9 +18,17 @@ android {
     namespace = "com.rahulverlekar.data"
     compileSdk = 35
 
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
+
     defaultConfig {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    sourceSets {
+        getByName("androidTest").assets.srcDir("$projectDir/schemas")
     }
 
     buildTypes {
@@ -41,6 +55,7 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(project(":domain"))
+    implementation(libs.androidx.room.testing.android)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.guava)
@@ -48,7 +63,7 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
-    testImplementation(libs.androidx.room.testing)
+    androidTestImplementation(libs.androidx.room.testing)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
@@ -57,5 +72,16 @@ dependencies {
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+class RoomSchemaArgProvider(
+    @get:InputDirectory
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    val schemaDir: File
+) : CommandLineArgumentProvider {
+
+    override fun asArguments(): Iterable<String> {
+        return listOf("room.schemaLocation=${schemaDir.path}")
     }
 }
