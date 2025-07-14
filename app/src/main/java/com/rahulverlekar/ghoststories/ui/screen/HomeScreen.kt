@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.rahulverlekar.ghoststories.ui.components.GhostCard
 import com.rahulverlekar.ghoststories.ui.intent.GhostSightingIntent
 import com.rahulverlekar.ghoststories.ui.viewmodel.GhostSightingViewModel
 
@@ -74,9 +75,9 @@ fun HomeScreen(viewModel: GhostSightingViewModel, navController: NavController) 
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(state.sighting) { ghost ->
-                        Text(ghost.name, Modifier.clickable {
+                        GhostCard(ghost) {
                             navController.navigate("addEdit?id=${ghost.id}")
-                        })
+                        }
                     }
                 }
             }
