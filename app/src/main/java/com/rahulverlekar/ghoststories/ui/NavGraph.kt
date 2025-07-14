@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.rahulverlekar.ghoststories.ui.screen.AddGhostSightingScreen
 import com.rahulverlekar.ghoststories.ui.screen.HomeScreen
 import com.rahulverlekar.ghoststories.ui.viewmodel.GhostSightingViewModel
 
@@ -18,7 +19,6 @@ fun NavGraph(navController: NavHostController) {
             val viewModel: GhostSightingViewModel = hiltViewModel()
             HomeScreen(viewModel, navController)
         }
-
         composable(
             "addEdit?id={id}",
             arguments = listOf(navArgument("id") {
@@ -26,9 +26,8 @@ fun NavGraph(navController: NavHostController) {
                 defaultValue = -1
             })
         ) { backStackEntry ->
-
             val id = backStackEntry.arguments?.getInt("id")?.takeIf { it != -1 }
-//            AddEditGhostScreen(viewModel, navController, id)
+            AddGhostSightingScreen(navGraph = navController)
         }
     }
 }

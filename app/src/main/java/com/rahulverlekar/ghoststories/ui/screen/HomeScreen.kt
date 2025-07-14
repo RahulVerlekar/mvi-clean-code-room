@@ -32,7 +32,7 @@ fun HomeScreen(viewModel: GhostSightingViewModel, navController: NavController) 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-
+                navController.navigate("addEdit")
             }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
