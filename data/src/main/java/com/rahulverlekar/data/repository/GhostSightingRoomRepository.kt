@@ -33,5 +33,15 @@ class GhostSightingRoomRepository @Inject constructor(
         return dao.getAll().map { it.toDomain() }
     }
 
+    override suspend fun getSighting(id: Int): GhostSighting? {
+        val data = dao.loadAllByIds(intArrayOf(id))
+        if(data.isEmpty()) {
+            return null
+        }
+        else {
+            return data.first().toDomain()
+        }
+    }
+
 
 }

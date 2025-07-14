@@ -32,7 +32,7 @@ fun HomeScreen(viewModel: GhostSightingViewModel, navController: NavController) 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-
+                navController.navigate("addEdit")
             }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
@@ -62,7 +62,7 @@ fun HomeScreen(viewModel: GhostSightingViewModel, navController: NavController) 
                 ) {
                     items(state.sighting) { ghost ->
                         Text(ghost.name, Modifier.clickable {
-                            navController.navigate("addEdit?id${ghost.id}")
+                            navController.navigate("addEdit?id=${ghost.id}")
                         })
                     }
                 }
