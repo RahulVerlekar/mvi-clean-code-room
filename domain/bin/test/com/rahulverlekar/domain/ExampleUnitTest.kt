@@ -1,4 +1,4 @@
-package com.rahulverlekar.ghoststories
+package com.rahulverlekar.domain
 
 import org.junit.Test
 

@@ -30,6 +30,8 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -41,6 +43,25 @@ android {
     buildFeatures {
         compose = true
     }
+
+    packaging {
+        resources {
+            pickFirsts.add("META-INF/LICENSE-notice.md")
+            pickFirsts.add("META-INF/LICENSE.md")
+        }
+    }
+}
+
+afterEvaluate {
+    rootProject.subprojects
+        .filter { it.name.contains("Domain") }
+        .forEach { subModule ->
+            subModule.afterEvaluate {
+                tasks.named("testDebugUnitTest").configure {
+                    dependsOn(subModule.tasks.named("test").get())
+                }
+            }
+        }
 }
 
 dependencies {
@@ -56,9 +77,12 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.navigation.hilt)
+    implementation(libs.androidx.navigation.testing.android)
     ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
+    androidTestImplementation(libs.kotlin.mockk)
+    testImplementation(libs.kotlinx.coroutine.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
