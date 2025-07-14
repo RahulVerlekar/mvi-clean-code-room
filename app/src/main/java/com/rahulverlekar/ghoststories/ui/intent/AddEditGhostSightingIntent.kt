@@ -10,5 +10,6 @@ sealed class AddEditGhostSightingIntent {
 
 sealed class AddEditUiEvent {
     object NavigateBack: AddEditUiEvent()
+    object Refresh: AddEditUiEvent()
     data class ShowMessage(val message: String): AddEditUiEvent()
 }

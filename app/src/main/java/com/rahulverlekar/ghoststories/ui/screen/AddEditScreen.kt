@@ -48,10 +48,18 @@ fun AddGhostSightingScreen(
 
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect { event ->
-            when(event) {
-                AddEditUiEvent.NavigateBack -> {
+            when (event) {
+                is AddEditUiEvent.Refresh -> {
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("shouldRefresh", true)
                     navController.popBackStack()
                 }
+
+                is AddEditUiEvent.NavigateBack -> {
+                    navController.popBackStack()
+                }
+
                 is AddEditUiEvent.ShowMessage -> {
                     snackbarHostState.showSnackbar(event.message)
                 }
@@ -99,7 +107,7 @@ fun AddGhostSightingScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 OutlinedButton(onClick = {
-
+                    viewModel.onIntent(AddEditGhostSightingIntent.Cancel)
                 }) {
                     Text("Cancel")
                 }
