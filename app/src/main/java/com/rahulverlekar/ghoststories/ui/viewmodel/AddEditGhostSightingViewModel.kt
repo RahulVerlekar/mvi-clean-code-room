@@ -46,6 +46,10 @@ class AddEditGhostSightingViewModel @Inject constructor(
 
             AddEditGhostSightingIntent.Save -> {
                 viewModelScope.launch {
+                    if(_state.value.name.isBlank()) {
+                        _uiEvent.emit(AddEditUiEvent.ShowMessage("Name cannot be blank"))
+                        return@launch
+                    }
                     if (_state.value.isEditMode) {
                         repository.edit(
                             GhostSighting(
