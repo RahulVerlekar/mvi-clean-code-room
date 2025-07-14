@@ -30,6 +30,8 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -40,6 +42,13 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+
+    packaging {
+        resources {
+            pickFirsts.add("META-INF/LICENSE-notice.md")
+            pickFirsts.add("META-INF/LICENSE.md")
+        }
     }
 }
 
@@ -68,10 +77,11 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.navigation.hilt)
+    implementation(libs.androidx.navigation.testing.android)
     ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
-    testImplementation(libs.kotlin.mockk)
+    androidTestImplementation(libs.kotlin.mockk)
     testImplementation(libs.kotlinx.coroutine.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

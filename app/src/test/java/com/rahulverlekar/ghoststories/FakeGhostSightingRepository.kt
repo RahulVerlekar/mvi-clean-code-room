@@ -2,25 +2,16 @@ package com.rahulverlekar.ghoststories
 
 import com.rahulverlekar.domain.models.GhostSighting
 import com.rahulverlekar.domain.repository.GhostSightingRepository
+import kotlinx.coroutines.delay
 
 class FakeGhostSightingRepository : GhostSightingRepository {
 
-    private val data = mutableListOf(
+    val data = mutableListOf(
         GhostSighting(1, "Casper", 2),
         GhostSighting(2, "Banshee", 8),
         GhostSighting(3, "WereWolf", 6),
     )
-
-    fun resetData() {
-        data.clear()
-        data.addAll(
-            listOf(
-                GhostSighting(1, "Casper", 2),
-                GhostSighting(2, "Banshee", 8),
-                GhostSighting(3, "WereWolf", 6),
-            )
-        )
-    }
+    var simDelay = false
 
     override suspend fun add(item: GhostSighting): GhostSighting {
         val itemToAdd = if (item.id == 0) {
@@ -46,6 +37,10 @@ class FakeGhostSightingRepository : GhostSightingRepository {
     }
 
     override suspend fun getAllSighting(): List<GhostSighting> {
+        if (simDelay)
+        {
+            delay(500)
+        }
         return data.toList()
     }
 

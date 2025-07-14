@@ -1,35 +1,37 @@
 package com.rahulverlekar.ghoststories
 
-import com.rahulverlekar.domain.models.GhostSighting
-import com.rahulverlekar.domain.repository.GhostSightingRepository
 import com.rahulverlekar.ghoststories.ui.intent.GhostSightingIntent
 import com.rahulverlekar.ghoststories.ui.viewmodel.GhostSightingViewModel
-import io.mockk.coEvery
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
 class GhostSightingViewModelTest {
 
-    private lateinit var repository: GhostSightingRepository
+    private lateinit var repository: FakeGhostSightingRepository
     private lateinit var viewModel: GhostSightingViewModel
-
 
     @Before
     fun setup() {
         repository = FakeGhostSightingRepository()
+        viewModel = GhostSightingViewModel(repository)
     }
 
     @Test
-    fun `repository returns empty list updates state correctly`() = runTest {
-        coEvery { repository.getAllSighting() } returns emptyList()
-        viewModel = GhostSightingViewModel(repository)
-
+    fun `viewmodel model loads data when load intent is called`() = runTest {
         viewModel.onIntent(GhostSightingIntent.LoadSightings)
-        val state = viewModel.listState.value
-        assertTrue(!state.sighting.isEmpty())
+        val state = viewModel.listState
+        assertTrue("Data loaded successfully", state.value.sighting.count() == repository.getAllSighting().count())
     }
+
+    @Test
+    fun `viewmodel is loading when there is delay while fetching`() = runTest {
+        repository.simDelay = true
+        val oldLoading = viewModel.listState.value.isLoading
+        viewModel.onIntent(GhostSightingIntent.LoadSightings)
+        val newLoading = viewModel.listState.value.isLoading
+        assertTrue("Loading state changed", oldLoading != newLoading)
+    }
+
 }
