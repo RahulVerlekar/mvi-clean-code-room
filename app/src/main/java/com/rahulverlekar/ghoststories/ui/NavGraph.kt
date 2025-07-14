@@ -26,8 +26,8 @@ fun NavGraph(navController: NavHostController) {
                 defaultValue = -1
             })
         ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getInt("id")?.takeIf { it != -1 }
-            AddGhostSightingScreen(navGraph = navController)
+            val id = backStackEntry.arguments?.getInt("id")
+            AddGhostSightingScreen(navController = navController, id = id)
         }
     }
 }

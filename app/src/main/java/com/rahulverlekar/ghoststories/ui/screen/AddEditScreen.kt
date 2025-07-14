@@ -12,25 +12,55 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.rahulverlekar.ghoststories.ui.intent.AddEditGhostSightingIntent
+import com.rahulverlekar.ghoststories.ui.intent.AddEditUiEvent
 import com.rahulverlekar.ghoststories.ui.viewmodel.AddEditGhostSightingViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddGhostSightingScreen(viewModel: AddEditGhostSightingViewModel = hiltViewModel(), navGraph: NavController) {
+fun AddGhostSightingScreen(
+    viewModel: AddEditGhostSightingViewModel = hiltViewModel(),
+    id: Int?,
+    navController: NavController
+) {
 
     val state by viewModel.state.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(id) {
+        id?.let {
+            viewModel.onIntent(AddEditGhostSightingIntent.GhostIdSelected(id))
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collect { event ->
+            when(event) {
+                AddEditUiEvent.NavigateBack -> {
+                    navController.popBackStack()
+                }
+                is AddEditUiEvent.ShowMessage -> {
+                    snackbarHostState.showSnackbar(event.message)
+                }
+            }
+        }
+    }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(title = { Text(text = "Add Ghost") })
         }

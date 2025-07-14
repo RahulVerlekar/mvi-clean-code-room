@@ -11,4 +11,6 @@ interface GhostSightingRepository: Repository {
     suspend fun delete(item: GhostSighting): Boolean
 
     suspend fun getAllSighting(): List<GhostSighting>
+
+    suspend fun getSighting(id: Int): GhostSighting?
 }

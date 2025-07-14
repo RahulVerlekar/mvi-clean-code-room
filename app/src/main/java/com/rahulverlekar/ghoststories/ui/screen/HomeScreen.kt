@@ -62,7 +62,7 @@ fun HomeScreen(viewModel: GhostSightingViewModel, navController: NavController) 
                 ) {
                     items(state.sighting) { ghost ->
                         Text(ghost.name, Modifier.clickable {
-                            navController.navigate("addEdit?id${ghost.id}")
+                            navController.navigate("addEdit?id=${ghost.id}")
                         })
                     }
                 }
