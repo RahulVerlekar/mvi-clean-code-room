@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rahulverlekar.domain.repository.GhostSightingRepository
 import com.rahulverlekar.ghoststories.ui.intent.AddEditGhostSightingIntent
+import com.rahulverlekar.ghoststories.ui.intent.GhostSightingIntent
 import com.rahulverlekar.ghoststories.ui.state.GhostSightingListState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,10 +22,22 @@ class GhostSightingViewModel @Inject constructor(
     val listState = _listState.asStateFlow()
 
     init {
+        loadSighting()
+    }
+
+    private fun loadSighting() {
         _listState.value = _listState.value.copy(isLoading = true)
         viewModelScope.launch {
             val data = repository.getAllSighting()
             _listState.value = _listState.value.copy(sighting = data, isLoading = false)
+        }
+    }
+
+    fun onIntent(intent: GhostSightingIntent) {
+        when(intent) {
+            GhostSightingIntent.LoadSightings -> {
+                loadSighting()
+            }
         }
     }
 }

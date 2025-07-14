@@ -37,7 +37,9 @@ class AddEditGhostSightingViewModel @Inject constructor(
             }
 
             is AddEditGhostSightingIntent.NameChanged -> {
-                _state.value = _state.value.copy(name = intent.name)
+                viewModelScope.launch {
+                    _state.value = _state.value.copy(name = intent.name)
+                }
             }
 
             is AddEditGhostSightingIntent.ScarinessChanged -> {
@@ -68,7 +70,7 @@ class AddEditGhostSightingViewModel @Inject constructor(
                             )
                         )
                     }
-                    _uiEvent.emit(AddEditUiEvent.NavigateBack)
+                    _uiEvent.emit(AddEditUiEvent.Refresh)
                 }
             }
 
