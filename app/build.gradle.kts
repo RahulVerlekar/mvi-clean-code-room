@@ -43,6 +43,18 @@ android {
     }
 }
 
+afterEvaluate {
+    rootProject.subprojects
+        .filter { it.name.contains("Domain") }
+        .forEach { subModule ->
+            subModule.afterEvaluate {
+                tasks.named("testDebugUnitTest").configure {
+                    dependsOn(subModule.tasks.named("test").get())
+                }
+            }
+        }
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -59,6 +71,8 @@ dependencies {
     ksp(libs.hilt.compiler)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlin.mockk)
+    testImplementation(libs.kotlinx.coroutine.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
